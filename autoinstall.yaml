@@ -1,0 +1,60 @@
+#cloud-config
+autoinstall:
+    version: 1
+    locale: pt_BR.UTF-8
+    timezone: America/Fortaleza
+    keyboard:
+      layout: br
+      variant: abnt2
+    identity:
+      realname: "José Gabriel"
+      hostname: inspiron
+      username: gabriel
+      password: "$y$j9T$N9fIwf2u0s1XvVqju/8990$reVoG/MYAK6VMbmLhm3Zu6.hetIbHJoQS/09YXu/lWB"
+    ssh:
+      install-server: true
+      allow-pw: true
+    updates: all
+    codecs: 
+      install: true
+    
+    drivers:
+      install: true
+    storage:
+      layout:
+        name: direct
+    packages:
+      - vim
+      - alacritty
+      - curl
+      - wget
+      - git
+      - htop
+      - net-tools
+      - unzip
+      - docker-compose-plugin
+      - docker.io
+      - postgresql
+      - redis-server
+      - build-essential
+      - python3
+      - python3-pip
+      - nodejs
+      - npm
+      - openjdk-17-jdk
+      - openssh-server
+      - ca-certificates
+      - gnupg
+      - sddm
+    late-commands:
+      # Brave
+      - curtin in-target -- bash -c "curl -fsSLo /usr/share/keyrings/brave-browser-archive-keyring.gpg https://brave-browser-apt-release.s3.brave.com/brave-browser-archive-keyring.gpg"
+      - curtin in-target -- bash -c "echo 'deb [signed-by=/usr/share/keyrings/brave-browser-archive-keyring.gpg] https://brave-browser-apt-release.s3.brave.com/ stable main' > /etc/apt/sources.list.d/brave-browser-release.list"
+      - curtin in-target -- apt update
+      - curtin in-target -- apt install -y brave-browser
+      # Definir SDDM como display manager padrão
+      - curtin in-target -- bash -c "echo '/usr/bin/sddm' > /etc/X11/default-display-manager"
+      # Desabilitar GDM
+      - curtin in-target -- systemctl disable gdm3 || true
+      - curtin in-target -- systemctl enable sddm
+    shutdown: reboot
