@@ -6,7 +6,6 @@ autoinstall:
 
   keyboard:
     layout: br
-    variant: abnt2
 
   identity:
     realname: "José Gabriel"
